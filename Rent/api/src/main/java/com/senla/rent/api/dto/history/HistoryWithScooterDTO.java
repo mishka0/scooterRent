@@ -31,8 +31,6 @@ public class HistoryWithScooterDTO {
 
     private TariffDTO tariff;
 
-    private boolean isSubscription;
-
     private boolean isClosed;
 }
 

@@ -9,6 +9,7 @@ import com.senla.rent.entity.SubscriptionInfo;
 import com.senla.rent.entity.User;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class SubscriptionRepositoryImplTest {
     private SubscriptionRepository subscriptionRepository;
 
     @Test
+    @Ignore
     public void insert() {
         subscriptionRepository.insert(new Subscription(Duration.parse("PT1H"), new SubscriptionInfo(), new User()));
     }

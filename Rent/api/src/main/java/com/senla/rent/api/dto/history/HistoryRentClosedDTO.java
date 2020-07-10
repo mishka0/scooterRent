@@ -1,6 +1,7 @@
 package com.senla.rent.api.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.senla.rent.api.dto.subscription.SubscriptionInfoDTO;
 import com.senla.rent.api.dto.tariff.TariffDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class HistoryRentClosedDTO {
 
     private TariffDTO tariff;
 
-    private boolean isSubscription;
+    private SubscriptionInfoDTO subscriptionInfo;
 
     private boolean isClosed;
 }

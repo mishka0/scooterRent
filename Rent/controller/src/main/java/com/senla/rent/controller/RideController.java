@@ -36,10 +36,9 @@ public class RideController {
     @PostMapping("/end")
     public HistoryRentClosedDTO endRide(
             @AuthenticationPrincipal UserJWT userJWT,
-            @RequestParam(value = "idScooter") Integer scooterId,
-            @RequestParam(value = "idSubscription", required = false) Integer subscriptionId
+            @RequestParam(value = "idScooter") Integer scooterId
     ) {
-       return rideService.endRide(userJWT, scooterId, subscriptionId);
+       return rideService.endRide(userJWT, scooterId);
     }
 
 }

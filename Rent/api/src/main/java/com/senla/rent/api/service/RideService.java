@@ -9,5 +9,5 @@ public interface RideService {
 
     void goRide(UserJWT user, Integer scooterId, Integer tariffId);
 
-    HistoryRentClosedDTO endRide(UserJWT userJWT, Integer scooterDTO, Integer subscriptionId);
+    HistoryRentClosedDTO endRide(UserJWT userJWT, Integer scooterDTO);
 }

@@ -33,7 +33,5 @@ public class HistoryWithUserDTO {
 
     private UserWithAdditionDTO user;
 
-    private boolean isSubscription;
-
     private boolean isClosed;
 }

@@ -27,6 +27,10 @@ public class History {
     @JoinColumn(name = "tariff_id")
     private Tariff tariff;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscription_id")
+    private Subscription subscription;
+
     @Column(name = "final_cost")
     private Double cost;
 
@@ -43,22 +47,19 @@ public class History {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "is_subscription")
-    private boolean isSubscription;
-
     @Column(name = "is_closed")
     private boolean isClosed;
 
     public History() {
     }
 
-    public History(Scooter scooter, Tariff tariff, LocalDate dateRide, LocalTime timeStart, User user, boolean isSubscription, boolean isClosed) {
+    public History(Scooter scooter, Tariff tariff, LocalDate dateRide, LocalTime timeStart, User user, Subscription subscription,  boolean isSubscription, boolean isClosed) {
         this.scooter = scooter;
         this.tariff = tariff;
         this.dateRide = dateRide;
         this.timeStart = timeStart;
         this.user = user;
-        this.isSubscription = isSubscription;
+        this.subscription = subscription;
         this.isClosed = isClosed;
     }
 
@@ -67,17 +68,17 @@ public class History {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         History history = (History) o;
-        return isSubscription == history.isSubscription &&
-                Objects.equals(id, history.id) &&
-                Objects.equals(cost, history.cost) &&
-                Objects.equals(dateRide, history.dateRide) &&
-                Objects.equals(timeStart, history.timeStart) &&
-                Objects.equals(timeEnd, history.timeEnd);
+        return isClosed == history.isClosed &&
+                id.equals(history.id) &&
+                cost.equals(history.cost) &&
+                dateRide.equals(history.dateRide) &&
+                timeStart.equals(history.timeStart) &&
+                timeEnd.equals(history.timeEnd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cost, dateRide, timeStart, timeEnd, isSubscription);
+        return Objects.hash(id, cost, dateRide, timeStart, timeEnd, isClosed);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class History {
                 ", dateRide=" + dateRide +
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
-                ", isSubscription=" + isSubscription +
+                ", isClosed=" + isClosed +
                 '}';
     }
 }

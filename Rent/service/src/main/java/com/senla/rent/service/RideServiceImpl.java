@@ -44,24 +44,25 @@ public class RideServiceImpl implements RideService {
         User currentUser = userService.getUser(userJWT.getUser().getId());
         Subscription subscription = subscriptionService.getSubscription(subscriptionId);
 
-        if (!subscription.getUser().getId().equals(currentUser.getId()))
-        {
+        if (!subscription.getUser().getId().equals(currentUser.getId())) {
             throw new NotUserSubscriptionException("Not user subscription!");
         }
 
         if (currentUser.getAddition().getBalance() < -1.00) {
             throw new NotEnoughMoney("User balance is: " + currentUser.getAddition().getBalance() + " Minimum need balance is -1.00 ");
         }
+
         if (historyService.existNonClosed(currentUser.getId())) {
             throw new RideException("You're already rent scooter!");
         }
         History history = new History(
                 scooterService.getScooterWithHistory(scooterId),
-                tariffService.getTariffById(null),
+                null,
                 LocalDate.now(),
                 LocalTime.now(),
                 currentUser,
-                false,
+                subscription,
+                true,
                 false
         );
         historyService.addHistory(history);
@@ -72,7 +73,7 @@ public class RideServiceImpl implements RideService {
         User currentUser = userService.getUser(userJWT.getUser().getId());
 
         if (currentUser.getAddition().getBalance() < 3.00) {
-            throw new NotEnoughMoney("User balance is: " + currentUser.getAddition().getBalance() + " Minimum need balance is -1.00 ");
+            throw new NotEnoughMoney("User balance is: " + currentUser.getAddition().getBalance() + " Minimum need balance is 3.00 ");
         }
         if (historyService.existNonClosed(currentUser.getId())) {
             throw new RideException("You're already rent scooter!");
@@ -83,6 +84,7 @@ public class RideServiceImpl implements RideService {
                 LocalDate.now(),
                 LocalTime.now(),
                 currentUser,
+                null,
                 false,
                 false
         );
@@ -90,24 +92,22 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public HistoryRentClosedDTO endRide(UserJWT userJWT, Integer scooterDTO, Integer subscriptionId) {
+    public HistoryRentClosedDTO endRide(UserJWT userJWT, Integer scooterDTO) {
         User currentUser = userService.getUser(userJWT.getUser().getId());
         History history = historyService.getNonClosedRent(currentUser.getId());
         history.setTimeEnd(LocalTime.now());
-        Duration rideTimeInSeconds = Duration.between(history.getTimeStart(), history.getTimeEnd());
-        Duration tariffDurationInSeconds = history.getTariff().getDurationTariff();
-        Subscription subscription = subscriptionService.getSubscription(subscriptionId);
+        Duration rideTime = Duration.between(history.getTimeStart(), history.getTimeEnd());
+        Subscription subscription = history.getSubscription();
 
-        if (history.isSubscription()) {
-            if (!subscription.getUser().getId().equals(currentUser.getId()))
-            {
+        if (subscription != null) {
+            if (!subscription.getUser().getId().equals(currentUser.getId())) {
                 throw new NotUserSubscriptionException("Not user subscription!");
             }
             history.setCost(
-                    calculatePayWithSubscription(rideTimeInSeconds, tariffDurationInSeconds, subscription));
+                    calculatePayWithSubscription(rideTime, subscription));
         } else {
             history.setCost(
-                    calculatePay(rideTimeInSeconds, tariffDurationInSeconds, history.getTariff()));
+                    calculatePay(rideTime, history.getTariff().getDurationTariff(), history.getTariff().getCost()));
         }
         currentUser.getAddition().setBalance(
                 currentUser.getAddition().getBalance() - history.getCost());
@@ -115,27 +115,25 @@ public class RideServiceImpl implements RideService {
         return modelMapper.map(history, HistoryRentClosedDTO.class);
     }
 
-    private Double calculatePayWithSubscription(Duration rideTimeInSeconds, Duration tariffDurationInSeconds, Subscription subscription){
+    private Double calculatePayWithSubscription(Duration rideTime , Subscription subscription) {
         Duration timeLeft = subscription.getTimeLeft();
-        if (timeLeft.getSeconds() > rideTimeInSeconds.getSeconds())
-        {
-            subscription.setTimeLeft(timeLeft.minus(rideTimeInSeconds));
+        if (timeLeft.getSeconds() > rideTime.getSeconds()) {
+            subscription.setTimeLeft(timeLeft.minus(rideTime));
             return 0.0;
-        }
-        else
-        {
-            Duration leftTimeToPay = rideTimeInSeconds.minus(timeLeft);
+        } else {
+            Duration leftTimeToPay = rideTime.minus(timeLeft);
             subscription.setTimeLeft(Duration.ZERO);
-            return calculatePay(leftTimeToPay, tariffDurationInSeconds,tariffService.getTariffByName("Minutes"));
+            Tariff tariff = tariffService.getTariffByName("Minutes");
+            return calculatePay(leftTimeToPay, tariff.getDurationTariff(), tariff.getCost() );
         }
     }
 
-    private Double calculatePay(Duration rideTimeInSeconds, Duration tariffDurationInSeconds, Tariff tariff){
-        if (tariffDurationInSeconds.getSeconds() > rideTimeInSeconds.getSeconds()) {
-            return tariff.getCost();
+    private Double calculatePay(Duration rideTime, Duration tariffDuration, Double cost) {
+        if (tariffDuration.getSeconds() > rideTime.getSeconds()) {
+            return cost;
         } else {
-            Long countOfTimeRide = (rideTimeInSeconds.getSeconds() / tariffDurationInSeconds.getSeconds() + 1);
-            return countOfTimeRide * tariff.getCost();
+            Long countOfTimeRide = (rideTime.getSeconds() / tariffDuration.getSeconds() + 1);
+            return countOfTimeRide * cost;
         }
     }
 }

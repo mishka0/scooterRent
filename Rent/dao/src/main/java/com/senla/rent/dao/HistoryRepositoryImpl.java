@@ -47,10 +47,16 @@ public class HistoryRepositoryImpl extends AbstractRepository<History, Integer> 
 
     @Override
     public boolean existNonClosed(Integer idUser) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
+        Root<History> from = query.from(History.class);
+        query.select(from.get(History_.user))
+                .where(criteriaBuilder.equal(from.get(History_.user), idUser))
+                .where(criteriaBuilder.equal(from.get(History_.isClosed), false));
         try {
-            getNonClosedRent(idUser);
+            entityManager.createQuery(query).getSingleResult();
             return true;
-        } catch (NoResultException ex) {
+        } catch (RuntimeException ex) {
             return false;
         }
     }

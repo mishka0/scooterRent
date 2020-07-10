@@ -31,6 +31,9 @@ public class Subscription {
     @JoinColumn(name = "subs_info_id")
     private SubscriptionInfo subscriptionInfo;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subscription")
+    private Set<History> histories;
+
     public Subscription(Duration timeLeft, SubscriptionInfo subscriptionInfo, User user) {
         this.timeLeft = timeLeft;
         this.subscriptionInfo = subscriptionInfo;
