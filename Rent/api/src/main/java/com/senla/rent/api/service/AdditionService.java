@@ -1,11 +1,10 @@
 package com.senla.rent.api.service;
 
 import com.senla.rent.api.dto.addition.AdditionDTO;
+import com.senla.rent.api.dto.addition.AdditionEditDTO;
 
 public interface AdditionService {
-    AdditionDTO getUserAddition(String token);
+    AdditionDTO getUserAddition(Integer id);
 
-    void updateAddition(String token, AdditionDTO additionDTO);
-
-    void insertAddition(AdditionDTO additionDTO);
+    void updateAddition(Integer id, AdditionEditDTO additionEditDTO);
 }

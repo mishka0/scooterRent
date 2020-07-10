@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -22,14 +23,21 @@ public class History {
     @JoinColumn(name = "scooter_id")
     private Scooter scooter;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "tariff_id")
+    private Tariff tariff;
+
     @Column(name = "final_cost")
     private Double cost;
 
     @Column(name = "date_of_ride")
     private LocalDate dateRide;
 
-    @Column(name = "time_ride")
-    private Duration timeRide;
+    @Column(name = "time_start")
+    private LocalTime timeStart;
+
+    @Column(name = "time_end")
+    private LocalTime timeEnd;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -37,6 +45,22 @@ public class History {
 
     @Column(name = "is_subscription")
     private boolean isSubscription;
+
+    @Column(name = "is_closed")
+    private boolean isClosed;
+
+    public History() {
+    }
+
+    public History(Scooter scooter, Tariff tariff, LocalDate dateRide, LocalTime timeStart, User user, boolean isSubscription, boolean isClosed) {
+        this.scooter = scooter;
+        this.tariff = tariff;
+        this.dateRide = dateRide;
+        this.timeStart = timeStart;
+        this.user = user;
+        this.isSubscription = isSubscription;
+        this.isClosed = isClosed;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,12 +71,13 @@ public class History {
                 Objects.equals(id, history.id) &&
                 Objects.equals(cost, history.cost) &&
                 Objects.equals(dateRide, history.dateRide) &&
-                Objects.equals(timeRide, history.timeRide);
+                Objects.equals(timeStart, history.timeStart) &&
+                Objects.equals(timeEnd, history.timeEnd);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cost, dateRide, timeRide, isSubscription);
+        return Objects.hash(id, cost, dateRide, timeStart, timeEnd, isSubscription);
     }
 
     @Override
@@ -61,7 +86,8 @@ public class History {
                 "id=" + id +
                 ", cost=" + cost +
                 ", dateRide=" + dateRide +
-                ", timeRide=" + timeRide +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
                 ", isSubscription=" + isSubscription +
                 '}';
     }

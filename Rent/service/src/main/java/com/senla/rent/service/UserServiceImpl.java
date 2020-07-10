@@ -2,80 +2,82 @@ package com.senla.rent.service;
 
 import com.senla.rent.api.dao.UserRepository;
 import com.senla.rent.api.dto.security.RegistrationRequestDTO;
-import com.senla.rent.api.dto.user.UserInfoDTO;
-import com.senla.rent.api.dto.user.UserJWT;
+import com.senla.rent.api.dto.subscription.SubscriptionInfoDTO;
+import com.senla.rent.api.dto.user.UserFullInfoDTO;
 import com.senla.rent.api.security.JwtTokenProvider;
 import com.senla.rent.api.service.RoleService;
+import com.senla.rent.api.service.SubscriptionInfoService;
 import com.senla.rent.api.service.UserService;
+import com.senla.rent.entity.Addition;
+import com.senla.rent.entity.Subscription;
+import com.senla.rent.entity.SubscriptionInfo;
 import com.senla.rent.entity.User;
+import com.senla.rent.service.exceptions.NotEnoughMoney;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.util.HashSet;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final ModelMapper modelMapper;
-
     private final PasswordEncoder passwordEncoder;
-
     private final RoleService roleService;
+    private final SubscriptionInfoService subscriptionInfoService;
 
-
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService, JwtTokenProvider jwtTokenProvider) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService, SubscriptionInfoService subscriptionInfoService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.subscriptionInfoService = subscriptionInfoService;
     }
 
     @Override
-    public UserJWT findByLogin(String login) {
-        return new UserJWT(userRepository.findByLogin(login));
+    public UserFullInfoDTO getUserInfo(Integer id) {
+        return modelMapper.map(userRepository.getUserWithAllInfo(id), UserFullInfoDTO.class);
     }
 
     @Override
-    public Integer getUserId(String username) {
-        return userRepository.getUserId(username);
+    public void buySubscription(Integer id, SubscriptionInfoDTO subscriptionInfoDTO) {
+        User user = userRepository.getUserWithAllInfo(id);
+        if (user.getAddition().getBalance() >= subscriptionInfoDTO.getCost()) {
+            user.getSubscriptions().add(new Subscription(Duration.parse(subscriptionInfoDTO.getTime()), subscriptionInfoService.getSubsInfo(subscriptionInfoDTO.getId()), user));
+            user.getAddition().setBalance(user.getAddition().getBalance() - subscriptionInfoDTO.getCost());
+            userRepository.update(user);
+        } else {
+            throw new NotEnoughMoney(
+                    "User balance is : "
+                            + user.getAddition().getBalance()
+                            + " but cost of subs is : "
+                            + subscriptionInfoDTO.getCost());
+        }
     }
 
     @Override
-    public void updateUser(String token, UserInfoDTO userInfoDTO) {
-        User userOld = userRepository.findByLogin(jwtTokenProvider.getUsername(token));
-        modelMapper.map(userOld, userInfoDTO);
-        userRepository.update(userOld);
+    public User getUser(Integer id) {
+        return userRepository.getUserWithAllInfo(id);
     }
 
     @Override
-    public UserInfoDTO getUserInfo(String token) {
-        User user = userRepository.getUserWithAllInfo(jwtTokenProvider.getUsername(token));
-        return modelMapper.map(user, UserInfoDTO.class);
-    }
-
-    @Override
-    public UserJWT register(RegistrationRequestDTO userReg, boolean isModer) {
-        if (userReg.getRoles() == null) {
-            userReg.setPassword(passwordEncoder.encode(userReg.getPassword()));
-            userReg.setRoles(new ArrayList<>());
-            userReg.getRoles().add(roleService.findByName("USER"));
+    public void registerUser(RegistrationRequestDTO userReg, boolean isModer) {
+        User user = modelMapper.map(userReg, User.class);
+        if (user.getRoles() == null) {
+            user.setPassword(passwordEncoder.encode(userReg.getPassword()));
+            user.setRoles(new HashSet<>());
+            user.getRoles().add(roleService.findByName("USER"));
         }
         if (isModer) {
-            userReg.getRoles().add(roleService.findByName("MODER"));
+            user.getRoles().add(roleService.findByName("MODER"));
         }
-        User user = modelMapper.map(userReg, User.class);
+        user.setAddition(new Addition());
         userRepository.insert(user);
-
-
-        return new UserJWT(user);
     }
 
     @Override

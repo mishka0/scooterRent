@@ -9,7 +9,8 @@ import java.util.Objects;
 
 @Entity
 @Table (name = "addition")
-@Getter @Setter
+@Getter
+@Setter
 public class Addition {
 
     @Id
@@ -32,7 +33,7 @@ public class Addition {
     @Column(name = "balance")
     private Double balance;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -57,7 +58,7 @@ public class Addition {
     @Override
     public String toString() {
         return "Addition{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +

@@ -2,6 +2,7 @@ package com.senla.rent.api.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.senla.rent.api.dto.scooter.ScooterDTO;
+import com.senla.rent.api.dto.tariff.TariffDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,12 +18,18 @@ public class HistoryDTO {
 
     private Double cost;
 
-    private String timeRide;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateRide;
 
-    private ScooterDTO scooter;
+    @JsonFormat(pattern = "HH:mm::ss")
+    private LocalTime timeStart;
+
+    @JsonFormat(pattern = "HH:mm::ss")
+    private LocalTime timeEnd;
+
+    private TariffDTO tariff;
 
     private boolean isSubscription;
+
+    private boolean isClosed;
 }

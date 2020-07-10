@@ -3,17 +3,22 @@ package com.senla.rent.dao.configs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.senla.rent.configs.hibernate.HibernateConfig;
+import com.senla.rent.configs.spring.SpringConfig;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-@ComponentScan({"com.senla.rent.dao"})
+@ComponentScan({"com.senla.rent"})
 public class LaunchTestConfiguration extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{LaunchTestConfiguration.class, HibernateTestConfig.class};
+        return new Class[]{HibernateTestConfig.class, MapperTestConfig.class};
     }
 
     @Override
@@ -26,13 +31,13 @@ public class LaunchTestConfiguration extends AbstractAnnotationConfigDispatcherS
         return new String[]{"/"};
     }
 
-//    @Autowired
-//    private WebApplicationContext webApplicationContext;
-//
-//    @Bean
-//    public MockMvc createMockMvc() {
-//        return MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-//    }
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Bean
+    public MockMvc createMockMvc() {
+        return MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Bean
     public ObjectMapper createObjectMapper() {
@@ -40,7 +45,7 @@ public class LaunchTestConfiguration extends AbstractAnnotationConfigDispatcherS
     }
 
     @Bean
-    public ModelMapper createMapper() {
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 

@@ -1,6 +1,6 @@
 package com.senla.rent.api.dto.scooter;
 
-import com.senla.rent.entity.StatusScooter;
+import com.senla.rent.api.dto.statusscooter.StatusScooterDTO;
 import lombok.Getter;
 import lombok.Setter;
 

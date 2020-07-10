@@ -6,7 +6,7 @@ public interface GenericRepository<T, PK> {
 
     void insert(T entity);
 
-    List<T> findAll(int page, int limit);
+    List<T> findAll(Integer page, Integer limit);
 
     T findById(PK pk);
 
@@ -14,5 +14,5 @@ public interface GenericRepository<T, PK> {
 
     void delete(T entity);
 
-    void deleteByID(PK id);
+    boolean existById(PK id);
 }

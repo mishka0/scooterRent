@@ -1,13 +1,12 @@
 package com.senla.rent.api.security;
 
-import com.senla.rent.api.dto.user.UserJWT;
 import org.springframework.security.core.Authentication;
-
+import org.springframework.security.core.userdetails.UserDetails;
 import javax.servlet.http.HttpServletRequest;
 
 public interface JwtTokenProvider {
 
-    String createToken(UserJWT user);
+    String createToken(UserDetails user);
 
     Authentication getAuthentication(String token);
 

@@ -50,7 +50,7 @@ public class SubscriptionInfo {
     @Override
     public String toString() {
         return "SubscriptionInfo{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", name='" + name + '\'' +
                 ", cost=" + cost +
                 ", time=" + time +

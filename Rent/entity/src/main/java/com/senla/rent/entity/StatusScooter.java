@@ -1,11 +1,16 @@
 package com.senla.rent.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "status_scooter")
+@Getter
+@Setter
 public class StatusScooter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +40,7 @@ public class StatusScooter {
     @Override
     public String toString() {
         return "StatusScooter{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", status='" + status + '\'' +
                 '}';
     }

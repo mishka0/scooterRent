@@ -2,10 +2,12 @@ package com.senla.rent.service;
 
 import com.senla.rent.api.dao.AdditionRepository;
 import com.senla.rent.api.dto.addition.AdditionDTO;
+import com.senla.rent.api.dto.addition.AdditionEditDTO;
 import com.senla.rent.api.security.JwtTokenProvider;
 import com.senla.rent.api.service.AdditionService;
 import com.senla.rent.api.service.UserService;
 import com.senla.rent.entity.Addition;
+import com.senla.rent.service.exceptions.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,45 +19,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdditionServiceImpl implements AdditionService {
 
     private final AdditionRepository additionRepository;
-
-    private final UserService userService;
-
-    private final JwtTokenProvider jwtTokenProvider;
-
     private final ModelMapper modelMapper;
 
-    public AdditionServiceImpl(AdditionRepository additionRepository, UserService userService, JwtTokenProvider jwtTokenProvider, ModelMapper modelMapper) {
+    public AdditionServiceImpl(AdditionRepository additionRepository, ModelMapper modelMapper) {
         this.additionRepository = additionRepository;
-        this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public AdditionDTO getUserAddition(String token) {
-
+    public AdditionDTO getUserAddition(Integer id) {
         try {
-            return modelMapper.map(additionRepository
-                    .getUserAddition(userService
-                            .getUserId(jwtTokenProvider.getUsername(token))), AdditionDTO.class);
+            return modelMapper.map(additionRepository.getUserAddition(id), AdditionDTO.class);
         }
         catch (RuntimeException exception)
         {
-            log.error("Can't get user addition: " + exception.getMessage());
+            log.error("Can't get user addition! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get user addition");
         }
-        return new AdditionDTO();
     }
 
     @Override
-    public void updateAddition(String token, AdditionDTO additionDTO) {
+    public void updateAddition(Integer id, AdditionEditDTO additionEditDTO) {
 
-        Addition additionOld = additionRepository.findById(userService.getUserId(jwtTokenProvider.getUsername(token)));
-        modelMapper.map(additionDTO, additionOld);
-        additionRepository.update(additionOld);
-    }
-
-    @Override
-    public void insertAddition(AdditionDTO additionDTO) {
-        additionRepository.insert(modelMapper.map(additionDTO, Addition.class));
+        try {
+            Addition additionOld = additionRepository.findById(id);
+            modelMapper.map(additionEditDTO, additionOld);
+            additionRepository.update(additionOld);
+        } catch (RuntimeException exception) {
+            log.error("Can't update addition! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't update user addition");
+        }
     }
 }

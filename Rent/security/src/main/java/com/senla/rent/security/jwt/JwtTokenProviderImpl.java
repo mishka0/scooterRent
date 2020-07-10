@@ -32,10 +32,13 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private long validityInHours;
 
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     private String secretKey;
+
+    public JwtTokenProviderImpl(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostConstruct
     public void init() {
@@ -43,13 +46,11 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     }
 
     @Override
-    public String createToken(UserJWT user) {
-
+    public String createToken(UserDetails user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("roles", user.getAuthorities());
         Date now = new Date();
         Date validity = new Date(now.getTime() + (validityInHours * 60 * 60 * 1000));
-
         return Jwts.builder()//
                 .setClaims(claims)//
                 .setIssuedAt(now)//

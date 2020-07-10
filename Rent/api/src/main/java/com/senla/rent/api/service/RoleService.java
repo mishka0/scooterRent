@@ -1,8 +1,8 @@
 package com.senla.rent.api.service;
 
-import com.senla.rent.api.dto.user.RoleDTO;
+import com.senla.rent.entity.Role;
 
 
 public interface RoleService {
-    RoleDTO findByName(String name);
+    Role findByName(String name);
 }

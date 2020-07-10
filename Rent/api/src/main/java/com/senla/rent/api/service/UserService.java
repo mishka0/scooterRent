@@ -1,20 +1,20 @@
 package com.senla.rent.api.service;
 
 import com.senla.rent.api.dto.security.RegistrationRequestDTO;
-import com.senla.rent.api.dto.user.UserInfoDTO;
+import com.senla.rent.api.dto.subscription.SubscriptionInfoDTO;
+import com.senla.rent.api.dto.user.UserFullInfoDTO;
 import com.senla.rent.api.dto.user.UserJWT;
+import com.senla.rent.entity.User;
 
 public interface UserService {
 
-    UserJWT findByLogin(String login);
-
-    UserJWT register(RegistrationRequestDTO userReg, boolean isModer);
+    void registerUser(RegistrationRequestDTO userReg, boolean isModer);
 
     boolean existUser(String login);
 
-    Integer getUserId(String username);
+    UserFullInfoDTO getUserInfo(Integer id);
 
-    void updateUser(String token, UserInfoDTO userInfoDTO);
+    void buySubscription(Integer id, SubscriptionInfoDTO subscriptionInfoDTO);
 
-    UserInfoDTO getUserInfo(String token);
+    User getUser(Integer id);
 }

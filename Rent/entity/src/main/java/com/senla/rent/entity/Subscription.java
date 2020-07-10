@@ -27,9 +27,18 @@ public class Subscription {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "subs_info_id")
     private SubscriptionInfo subscriptionInfo;
+
+    public Subscription(Duration timeLeft, SubscriptionInfo subscriptionInfo, User user) {
+        this.timeLeft = timeLeft;
+        this.subscriptionInfo = subscriptionInfo;
+        this.user = user;
+    }
+
+    public Subscription() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -48,7 +57,7 @@ public class Subscription {
     @Override
     public String toString() {
         return "Subscription{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", timeLeft=" + timeLeft +
                 '}';
     }

@@ -1,16 +1,17 @@
 package com.senla.rent.configs.security;
 
 
-import com.senla.rent.controller.handlers.GlobalExceptionHandler;
 import com.senla.rent.security.filter.ExceptionHandlerFilter;
 import com.senla.rent.security.filter.JwtFilter;
 import com.senla.rent.security.jwt.JwtAccessDeniedHandlerImpl;
 import com.senla.rent.security.jwt.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,26 +20,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
-
-import javax.servlet.Filter;
 
 
 @EnableWebSecurity
 @PropertySource("classpath:jwt.properties")
+@Configuration
 public class SecurityWebConfigurer extends WebSecurityConfigurerAdapter {
-    @Autowired
-    public ExceptionHandlerFilter exceptionHandlerFilter;
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    public final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final JwtFilter jwtFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandlerImpl jwtAccessDeniedHandler;
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Autowired
-    private JwtAccessDeniedHandlerImpl jwtAccessDeniedHandler;
-
+    public SecurityWebConfigurer(ExceptionHandlerFilter exceptionHandlerFilter, JwtFilter jwtFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandlerImpl jwtAccessDeniedHandler) {
+        this.exceptionHandlerFilter = exceptionHandlerFilter;
+        this.jwtFilter = jwtFilter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,16 +58,15 @@ public class SecurityWebConfigurer extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
-
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/me").hasRole("USER")
+                .antMatchers("/profile/**").hasAuthority("USER")
+                .antMatchers("/moder/**").hasAuthority("MODER")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(exceptionHandlerFilter, WebAsyncManagerIntegrationFilter.class);

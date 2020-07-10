@@ -10,13 +10,11 @@ import java.util.Set;
 
 public interface UserRepository extends GenericRepository<User, Integer> {
 
-//    List<User> getUsersWithAdditions(Integer page, Integer limit);
-
     User findByLogin(String username);
 
     boolean existUser(String username);
 
-    Integer getUserId(String username);
+   // Integer getUserId(String username);
 
-    User getUserWithAllInfo(String username);
+    User getUserWithAllInfo(Integer id);
 }

@@ -1,11 +1,16 @@
 package com.senla.rent.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "scooter")
+@Getter
+@Setter
 public class Scooter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +29,7 @@ public class Scooter {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rental_point_id")
-    private RentalPoint rentalPoint;
+    private RentPoint rentPoint;
 
     @Override
     public boolean equals(Object o) {
@@ -43,7 +48,7 @@ public class Scooter {
     @Override
     public String toString() {
         return "Scooter{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", model='" + model + '\'' +
                 '}';
     }

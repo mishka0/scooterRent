@@ -1,11 +1,17 @@
 package com.senla.rent.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tariff")
+@Getter
+@Setter
 public class Tariff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +26,9 @@ public class Tariff {
 
     @Column(name = "duration")
     private Duration durationTariff;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tariff")
+    private Set<History> histories;
 
     @Override
     public boolean equals(Object o) {
@@ -40,7 +49,7 @@ public class Tariff {
     @Override
     public String toString() {
         return "Tariff{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", name='" + name + '\'' +
                 ", cost=" + cost +
                 ", durationTariff=" + durationTariff +

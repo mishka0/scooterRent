@@ -1,30 +1,31 @@
 package com.senla.rent.service;
 
 import com.senla.rent.api.dao.RoleRepository;
-import com.senla.rent.api.dto.user.RoleDTO;
 import com.senla.rent.api.service.RoleService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.senla.rent.entity.Role;
+import com.senla.rent.service.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-
 @Service
 @Transactional
+@Slf4j
 public class RoleServiceImpl implements RoleService{
 
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Override
-    public RoleDTO findByName(String name) {
-        return modelMapper.map(roleRepository.findByName(name), RoleDTO.class);
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
+    @Override
+    public Role findByName(String name) {
+        try {
+            return roleRepository.findByName(name);
+        } catch (RuntimeException exception) {
+            log.error("Can't get role by name! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get role by name!");
+        }
+    }
 }

@@ -19,5 +19,4 @@ public class SubscriptionInfoDTO {
     private Double cost;
 
     private String time;
-
 }

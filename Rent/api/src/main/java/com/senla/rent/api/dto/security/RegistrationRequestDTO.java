@@ -11,5 +11,4 @@ import java.util.List;
 public class RegistrationRequestDTO {
     private String login;
     private String password;
-    private List<RoleDTO> roles;
 }

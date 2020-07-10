@@ -20,7 +20,7 @@ public class Town {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "town", cascade = CascadeType.ALL)
-    private Set<RentalPoint> rentalPointSet;
+    private Set<RentPoint> rentPointSet;
 
     @Override
     public boolean equals(Object o) {
@@ -39,7 +39,7 @@ public class Town {
     @Override
     public String toString() {
         return "Town{" +
-                "id=" + id +
+                "idTown=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

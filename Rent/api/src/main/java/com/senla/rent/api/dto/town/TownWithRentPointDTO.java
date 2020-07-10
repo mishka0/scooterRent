@@ -1,6 +1,7 @@
 package com.senla.rent.api.dto.town;
 
-import com.senla.rent.api.dto.rentalpoint.RentalPointDTO;
+import com.senla.rent.api.dto.rentalpoint.RentPointDTO;
+import com.senla.rent.api.dto.rentalpoint.RentPointWithScooterDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,5 @@ public class TownWithRentPointDTO {
 
     private String name;
 
-    private Set<RentalPointDTO> pointSet;
+    private Set<RentPointWithScooterDTO> pointSet;
 }
