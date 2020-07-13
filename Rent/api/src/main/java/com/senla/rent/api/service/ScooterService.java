@@ -1,6 +1,9 @@
 package com.senla.rent.api.service;
 
-import com.senla.rent.api.dto.scooter.*;
+import com.senla.rent.api.dto.scooter.ScooterAddDTO;
+import com.senla.rent.api.dto.scooter.ScooterEditDTO;
+import com.senla.rent.api.dto.scooter.ScooterFullInfoDTO;
+import com.senla.rent.api.dto.scooter.ScooterInfoDTO;
 import com.senla.rent.api.dto.statusscooter.StatusScooterDTO;
 import com.senla.rent.entity.Scooter;
 
@@ -20,11 +23,11 @@ public interface ScooterService {
 
     void deleteScooter(Integer id);
 
-    ScooterHistoryDTO getScooterHistory(Integer id);
-
     void setStatusScooter(Integer id, StatusScooterDTO statusScooterDTO);
 
     Scooter getScooter(Integer id);
 
     Scooter getScooterWithHistory(Integer id);
+
+    List<ScooterInfoDTO> getStayScootersFromPoint(Integer idPoint);
 }

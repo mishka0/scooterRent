@@ -9,6 +9,8 @@ import com.senla.rent.api.security.JwtTokenProvider;
 import com.senla.rent.api.service.SubscriptionService;
 import com.senla.rent.api.service.UserService;
 import com.senla.rent.entity.Subscription;
+import com.senla.rent.service.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
@@ -30,16 +33,26 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionDTO> getUserSubs(Integer id) {
-        return subscriptionRepository
-                .getUsersSubs(id)
-                .stream()
-                .map(subscription -> modelMapper.map(subscription, SubscriptionDTO.class))
-                .collect(Collectors.toList());
+        try {
+            return subscriptionRepository
+                    .getUsersSubs(id)
+                    .stream()
+                    .map(subscription -> modelMapper.map(subscription, SubscriptionDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get user subscriptions! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get user subscriptions!");
+        }
     }
 
     @Override
     public Subscription getSubscription(Integer id) {
-        return subscriptionRepository.findById(id);
+        try {
+            return subscriptionRepository.findById(id);
+        } catch (RuntimeException exception) {
+            log.error("Can't get subscription! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get subscription!");
+        }
     }
 
 }

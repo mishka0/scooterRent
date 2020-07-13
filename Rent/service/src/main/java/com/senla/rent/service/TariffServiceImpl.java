@@ -5,6 +5,8 @@ import com.senla.rent.api.dto.tariff.TariffDTO;
 import com.senla.rent.api.dto.tariff.TariffEditDTO;
 import com.senla.rent.api.service.TariffService;
 import com.senla.rent.entity.Tariff;
+import com.senla.rent.service.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class TariffServiceImpl implements TariffService {
     private final TariffRepository tariffRepository;
     private final ModelMapper modelMapper;
@@ -27,37 +30,56 @@ public class TariffServiceImpl implements TariffService {
     @Override
     public List<TariffDTO> getAllTariffs(Integer page, Integer limit)
     {
-        return tariffRepository.findAll(page, limit)
-                .stream()
-                .map(tariff -> modelMapper.map(tariff, TariffDTO.class))
-                .collect(Collectors.toList());
+        try {
+            return tariffRepository.findAll(page, limit)
+                    .stream()
+                    .map(tariff -> modelMapper.map(tariff, TariffDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get all tariffs ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get all tariffs!");
+        }
     }
 
     @Override
     public void addTariff(TariffEditDTO tariffDTO) {
-        Tariff tariff = modelMapper.map(tariffDTO, Tariff.class);
-        tariffRepository.insert(tariff);
+        try {
+            tariffRepository.insert(modelMapper.map(tariffDTO, Tariff.class));
+        } catch (RuntimeException exception) {
+            log.error("Can't add tariff ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't add tariff!");
+        }
     }
 
     @Override
     public void updateTariff(Integer id, TariffEditDTO tariffDTO) {
-        if (tariffRepository.existById(id)) {
-            Tariff tariffOld = tariffRepository.findById(id);
-            modelMapper.map(tariffDTO, tariffOld);
-            tariffRepository.update(tariffOld);
-        } else {
-            /*logger*/
-            throw new SecurityException("Tariff with id: " + id + " not exist!");
+        try {
+            Tariff tariffToUpdate = tariffRepository.findById(id);
+            modelMapper.map(tariffDTO, tariffToUpdate);
+            tariffRepository.update(tariffToUpdate);
+        } catch (RuntimeException exception) {
+            log.error("Can't update tariff! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't update tariff!");
         }
     }
 
     @Override
     public Tariff getTariffById(Integer tariffId) {
-        return tariffRepository.findById(tariffId);
+        try {
+            return tariffRepository.findById(tariffId);
+        } catch (RuntimeException exception) {
+            log.error("Can't get tariff by ID ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get tariff by ID!");
+        }
     }
 
     @Override
     public Tariff getTariffByName(String name) {
-        return tariffRepository.findByName(name);
+        try {
+            return tariffRepository.findByName(name);
+        } catch (RuntimeException exception) {
+            log.error("Can't get tariff by name ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get tariff by name!");
+        }
     }
 }

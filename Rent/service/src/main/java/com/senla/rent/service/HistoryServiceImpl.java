@@ -49,22 +49,37 @@ public class HistoryServiceImpl implements HistoryService {
                     .collect(Collectors.toList());
         } catch (RuntimeException exception) {
             log.error("Can't get scooter history! Message exception: " + exception.getMessage());
-            throw new ServiceException("Can't get user addition");
+            throw new ServiceException("Can't get scooter history!");
         }
     }
 
     @Override
     public void addHistory(History history) {
-        historyRepository.insert(history);
+        try {
+            historyRepository.insert(history);
+        } catch (RuntimeException exception) {
+            log.error("Can't add history! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't add history!");
+        }
     }
 
     @Override
     public boolean existNonClosed(Integer idUser) {
-        return historyRepository.existNonClosed(idUser);
+        try {
+            return historyRepository.existNonClosed(idUser);
+        } catch (RuntimeException exception) {
+            log.error("Can't check non closed history! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't check non closed history!");
+        }
     }
 
     @Override
     public History getNonClosedRent(Integer idUser) {
-        return historyRepository.getNonClosedRent(idUser);
+        try {
+            return historyRepository.getNonClosedRent(idUser);
+        } catch (RuntimeException exception) {
+            log.error("Can't get non closed history! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get non closed history!");
+        }
     }
 }

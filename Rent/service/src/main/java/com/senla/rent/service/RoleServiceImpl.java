@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService{
             return roleRepository.findByName(name);
         } catch (RuntimeException exception) {
             log.error("Can't get role by name! Message exception: " + exception.getMessage());
-            throw new ServiceException("Can't get role by name!");
+            throw new ServiceException("Can't get role by name: " + name);
         }
     }
 }

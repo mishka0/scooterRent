@@ -1,15 +1,12 @@
 package com.senla.rent.api.dto.history;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.senla.rent.api.dto.scooter.ScooterDTO;
-import com.senla.rent.api.dto.subscription.SubscriptionDTO;
 import com.senla.rent.api.dto.subscription.SubscriptionInfoDTO;
 import com.senla.rent.api.dto.tariff.TariffDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter

@@ -1,6 +1,5 @@
 package com.senla.rent.api.dto.rentalpoint;
 
-import com.senla.rent.api.dto.scooter.ScooterDTO;
 import com.senla.rent.api.dto.scooter.ScooterInfoDTO;
 import lombok.Getter;
 import lombok.Setter;

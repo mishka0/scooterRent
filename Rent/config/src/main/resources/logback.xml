@@ -1,37 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration scan="true" scanPeriod="30 seconds">
+<configuration>
 
-    <appender name ="hibLogs" class =  "ch.qos.logback.core.FileAppender">
-        <file>C:/SenlaCourses/Rent/logs/hibLog.log</file>
+    <appender name="hibernate" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/hibernate.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-<!--    <appender name ="FILE" class =  "ch.qos.logback.core.ConsoleAppender">-->
-<!--        <file>rent.log</file>-->
-<!--        <encoder>-->
-<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="config" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/config.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-<!--    <logger name="org.hibernate.SQL" level="DEBUG" />-->
-<!--    <logger name="org.hibernate.type" level="TRACE" />-->
+    <appender name="spring" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/spring.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-    <logger name="org.hibernate.SQL" level="trace" additivity="false">
-        <appender-ref ref="hibLogs"/>
+    <appender name="service" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/service.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="other" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/others.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="com.senla.rent.com.senla.rent.controller.configs" level="error">
+        <appender-ref ref="config"/>
+    </logger>
+
+    <logger name="com.senla.rent.service" level="error">
+        <appender-ref ref="service"/>
+    </logger>
+
+    <logger name="org.springframework" level="error">
+        <appender-ref ref="spring"/>
+    </logger>
+
+    <logger name="org.hibernate.SQL" level="debug" additivity = "false">
+        <appender-ref ref="hibernate"/>
     </logger>
 
     <logger name="org.hibernate.type" level="trace" additivity="false">
-        <appender-ref ref="hibLogs"/>
+        <appender-ref ref="hibernate"/>
     </logger>
 
-    <root level = "info">
-        <appender-ref ref = "CONSOLE"/>
+    <root level="error">
+        <appender-ref ref="other"/>
     </root>
 </configuration>

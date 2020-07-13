@@ -2,6 +2,7 @@ package com.senla.rent.controller;
 
 import com.senla.rent.api.dto.rentalpoint.RentPointAllInfoDTO;
 import com.senla.rent.api.dto.rentalpoint.RentPointWithTownDTO;
+import com.senla.rent.api.dto.scooter.ScooterInfoDTO;
 import com.senla.rent.api.service.RentPointService;
 import com.senla.rent.api.service.ScooterService;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class RentPointController {
     }
 
     @GetMapping("/{id}")
-    public RentPointAllInfoDTO getScootersFromPoint(@PathVariable(value = "id") Integer idPoint){
-        return rentPointService.getRentPointDetails(idPoint);
+    public List<ScooterInfoDTO> getScootersFromPoint(@PathVariable(value = "id") Integer idPoint){
+        return scooterService.getStayScootersFromPoint(idPoint);
     }
 }

@@ -11,5 +11,4 @@ public class RoleDTO {
     private Integer id;
 
     private String role;
-
 }

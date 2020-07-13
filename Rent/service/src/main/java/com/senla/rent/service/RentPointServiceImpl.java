@@ -50,7 +50,7 @@ public class RentPointServiceImpl implements RentPointService {
     @Override
     public RentPointAllInfoDTO getRentPointDetails(Integer idPoint) {
         try {
-            return modelMapper.map(rentalPointRepository.getRentPointDetails(idPoint), RentPointAllInfoDTO.class);
+            return modelMapper.map(rentalPointRepository.getRentPoint(idPoint), RentPointAllInfoDTO.class);
         } catch (RuntimeException exception) {
             log.error("Can't get rent point details! Message exception: " + exception.getMessage());
             throw new ServiceException("Can't get rent point details!");
@@ -60,9 +60,9 @@ public class RentPointServiceImpl implements RentPointService {
     @Override
     public void updateRentPoint(Integer id, RentPointEditDTO rentalPointDTO) {
         try {
-            RentPoint rentPoint = rentalPointRepository.getRentPoint(id);
-            modelMapper.map(rentalPointDTO, rentPoint);
-            rentalPointRepository.update(rentPoint);
+            RentPoint rentPointToUpdate = rentalPointRepository.getRentPoint(id);
+            modelMapper.map(rentalPointDTO, rentPointToUpdate);
+            rentalPointRepository.update(rentPointToUpdate);
         } catch (RuntimeException exception) {
             log.error("Can't update rent point! Message exception: " + exception.getMessage());
             throw new ServiceException("Can't update rent point!");

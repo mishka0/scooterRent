@@ -5,6 +5,8 @@ import com.senla.rent.api.dto.statusscooter.StatusScooterAddDTO;
 import com.senla.rent.api.dto.statusscooter.StatusScooterDTO;
 import com.senla.rent.api.service.StatusScooterService;
 import com.senla.rent.entity.StatusScooter;
+import com.senla.rent.service.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class StatusScooterServiceImpl implements StatusScooterService {
 
     private final StatusScooterRepository statusScooterRepository;
@@ -26,41 +29,66 @@ public class StatusScooterServiceImpl implements StatusScooterService {
 
     @Override
     public StatusScooter getByName(String name) {
-        return statusScooterRepository.findByName(name);
+        try {
+            return statusScooterRepository.findByName(name);
+        } catch (RuntimeException exception) {
+            log.error("Can't get status scooter by name! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get status scooter by name!");
+        }
     }
 
     @Override
     public List<StatusScooterDTO> getAllStatuses(Integer page, Integer limit) {
-        return statusScooterRepository.findAll(page, limit)
-                .stream()
-                .map(statusScooter -> modelMapper.map(statusScooter, StatusScooterDTO.class))
-                .collect(Collectors.toList());
+        try {
+            return statusScooterRepository.findAll(page, limit)
+                    .stream()
+                    .map(statusScooter -> modelMapper.map(statusScooter, StatusScooterDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get all statuses ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get all statuses!");
+        }
     }
 
     @Override
     public void updateStatus(Integer id, StatusScooterDTO statusScooterDTO) {
-        if (statusScooterRepository.existById(id)) {
-            StatusScooter scooterOld = statusScooterRepository.findById(id);
-            modelMapper.map(statusScooterDTO, scooterOld);
-            statusScooterRepository.update(scooterOld);
-        } else {
-            throw new RuntimeException("CAN'T UPDATE NON EXIST BY ID");
+        try {
+            StatusScooter scooterToUpdate = statusScooterRepository.findById(id);
+            modelMapper.map(statusScooterDTO, scooterToUpdate);
+            statusScooterRepository.update(scooterToUpdate);
+        } catch (RuntimeException exception) {
+            log.error("Can't update status! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't update all statuses!");
         }
     }
 
     @Override
     public void addStatus(StatusScooterAddDTO statusScooterDTO) {
-        statusScooterRepository.insert(modelMapper.map(statusScooterDTO, StatusScooter.class));
+        try {
+            statusScooterRepository.insert(modelMapper.map(statusScooterDTO, StatusScooter.class));
+        } catch (RuntimeException exception) {
+            log.error("Can't add status ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't add status!");
+        }
     }
 
     @Override
     public StatusScooter findById(Integer id) {
-        return statusScooterRepository.findById(id);
+        try {
+            return statusScooterRepository.findById(id);
+        } catch (RuntimeException exception) {
+            log.error("Can't find status ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't find status!");
+        }
     }
 
     @Override
     public void deleteStatus(Integer id) {
-        StatusScooter statusScooter = statusScooterRepository.findById(id);
-        statusScooterRepository.delete(statusScooter);
+        try {
+            statusScooterRepository.delete(statusScooterRepository.findById(id));
+        } catch (RuntimeException exception) {
+            log.error("Can't delete status ! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't delete status!");
+        }
     }
 }

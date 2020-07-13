@@ -42,9 +42,9 @@ public class AdditionServiceImpl implements AdditionService {
     public void updateAddition(Integer id, AdditionEditDTO additionEditDTO) {
 
         try {
-            Addition additionOld = additionRepository.findById(id);
-            modelMapper.map(additionEditDTO, additionOld);
-            additionRepository.update(additionOld);
+            Addition additionToUpdate = additionRepository.findById(id);
+            modelMapper.map(additionEditDTO, additionToUpdate);
+            additionRepository.update(additionToUpdate);
         } catch (RuntimeException exception) {
             log.error("Can't update addition! Message exception: " + exception.getMessage());
             throw new ServiceException("Can't update user addition");

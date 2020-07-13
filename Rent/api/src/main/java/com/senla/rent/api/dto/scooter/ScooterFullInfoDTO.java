@@ -16,5 +16,4 @@ public class ScooterFullInfoDTO {
     private StatusScooterDTO statusScooter;
 
     private RentPointDTO rentPoint;
-
 }

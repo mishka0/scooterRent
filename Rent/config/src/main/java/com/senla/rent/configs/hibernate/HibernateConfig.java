@@ -52,12 +52,9 @@ public class HibernateConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-
         emf.setDataSource(dataSource());
         emf.setPackagesToScan("com.senla.rent");
-
         emf.setJpaVendorAdapter(vendorAdapter);
-
         emf.setJpaProperties(additionalProperties());
         return emf;
     }

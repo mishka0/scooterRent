@@ -1,7 +1,6 @@
 package com.senla.rent.api.service;
 
 import com.senla.rent.api.dto.subscription.SubscriptionDTO;
-import com.senla.rent.api.dto.subscription.SubscriptionInfoDTO;
 import com.senla.rent.entity.Subscription;
 
 import java.util.List;

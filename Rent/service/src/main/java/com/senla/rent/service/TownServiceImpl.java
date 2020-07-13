@@ -9,6 +9,7 @@ import com.senla.rent.api.service.TownService;
 import com.senla.rent.entity.RentPoint;
 import com.senla.rent.entity.Town;
 import com.senla.rent.service.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class TownServiceImpl implements TownService {
 
     private final TownRepository townRepository;
@@ -34,57 +36,70 @@ public class TownServiceImpl implements TownService {
 
     @Override
     public List<TownWithRentPointDTO> getTowns(Integer page, Integer limit) {
-        return townRepository.findAll(page, limit)
-                .stream()
-                .map(town -> modelMapper.map(town, TownWithRentPointDTO.class))
-                .collect(Collectors.toList());
+        try {
+            return townRepository.findAll(page, limit)
+                    .stream()
+                    .map(town -> modelMapper.map(town, TownWithRentPointDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get all towns! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get all towns!");
+        }
     }
 
     @Override
     public TownWithRentPointDTO getTownInfo(Integer id) {
         try {
-            Town town = townRepository.getInfoWithScooters(id);
-            return modelMapper.map(town, TownWithRentPointDTO.class);
-        } catch (MappingException exception) {
-            throw new ServiceException(exception.getMessage());
-        } catch (DataAccessException exception) {
-            throw new ServiceException(exception.getMessage());
+            return modelMapper.map(townRepository.getInfoWithScooters(id), TownWithRentPointDTO.class);
+        } catch (RuntimeException exception) {
+            log.error("Can't get town info! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get town info!");
         }
     }
 
     @Override
-    public Town getTownByID(Integer id) {
-        return townRepository.findById(id);
-    }
-
-    @Override
     public void addTown(TownAddDTO townDTO) {
-        townRepository.insert(modelMapper.map(townDTO, Town.class));
+        try {
+            townRepository.insert(modelMapper.map(townDTO, Town.class));
+        } catch (RuntimeException exception) {
+            log.error("Can't add town! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't add town!");
+        }
     }
 
     @Override
     public void deleteTownByID(Integer id) {
-        townRepository.delete(townRepository.findById(id));
+        try {
+            townRepository.delete(townRepository.findById(id));
+        } catch (RuntimeException exception) {
+            log.error("Can't delete town by id! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't delete town by id!");
+        }
     }
 
     @Override
     public void updateTown(Integer id, TownAddDTO townDTO) {
-        if (townRepository.existById(id)) {
-            Town townOld = townRepository.findById(id);
-            modelMapper.map(townDTO, townOld);
-            townRepository.update(townOld);
-        } else {
-            /*logger*/
-            throw new SecurityException("Tariff with id: " + id + " not exist!");
+        try {
+            Town townToUpdate = townRepository.findById(id);
+            modelMapper.map(townDTO, townToUpdate);
+            townRepository.update(townToUpdate);
+        } catch (RuntimeException exception) {
+            log.error("Can't update town! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't update town!");
         }
     }
 
     @Override
     public void addRentPointToTown(Integer id, RentPointDTO rentPointDTO) {
-        Town town = townRepository.findById(id);
-        RentPoint rentPoint = rentPointService.getRentPoint(rentPointDTO.getId());
-        town.getRentPointSet().add(rentPoint);
-        rentPoint.setTown(town);
+        try {
+            Town town = townRepository.findById(id);
+            RentPoint rentPoint = rentPointService.getRentPoint(rentPointDTO.getId());
+            town.getRentPointSet().add(rentPoint);
+            rentPoint.setTown(town);
+        } catch (RuntimeException exception) {
+            log.error("Can't add rent point to town! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't add rent point to town!");
+        }
     }
 }
 

@@ -70,12 +70,9 @@ public class ScooterServiceImpl implements ScooterService {
     @Override
     public void addScooter(ScooterAddDTO scooterAddDTO) {
         Scooter scooter = modelMapper.map(scooterAddDTO, Scooter.class);
-        if (scooter.getStatusScooter() == null)
-        {
+        if (scooter.getStatusScooter() == null) {
             scooter.setStatusScooter(statusScooterService.getByName("Stay"));
-        }
-        else
-        {
+        } else {
             scooter.setStatusScooter(statusScooterService.findById(scooterAddDTO.getStatusScooter().getId()));
         }
         scooterRepository.insert(scooter);
@@ -83,27 +80,37 @@ public class ScooterServiceImpl implements ScooterService {
 
     @Override
     public void updateScooter(Integer id, ScooterEditDTO scooterInfoDTO) {
-        if (scooterRepository.existById(id)) {
-            Scooter scooterOld = scooterRepository.findById(id);
-            modelMapper.map(scooterInfoDTO, scooterOld);
-            scooterRepository.update(scooterOld);
-        } else {
-            /*logger*/
-            throw new SecurityException("Scooter with id: " + id + " not exist!");
+        try {
+            Scooter scooterToUpdate = scooterRepository.findById(id);
+            modelMapper.map(scooterInfoDTO, scooterToUpdate);
+            scooterRepository.update(scooterToUpdate);
+        } catch (RuntimeException exception) {
+            log.error("Scooter with id: " + id + " not exist! Message exception: " + exception.getMessage());
+            throw new ServiceException("Scooter with id: " + id + " not exist!");
         }
     }
 
     @Override
     public void deleteScooter(Integer id) {
-        scooterRepository.delete(scooterRepository.findById(id));
+        try {
+            scooterRepository.delete(scooterRepository.findById(id));
+        } catch (RuntimeException exception) {
+            log.error("Can't delete scooter! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't delete scooter!");
+        }
     }
 
     @Override
     public void setStatusScooter(Integer id, StatusScooterDTO statusScooterDTO) {
-        StatusScooter statusScooter = statusScooterService.findById(statusScooterDTO.getId());
-        Scooter scooter = scooterRepository.findById(id);
-        scooter.setStatusScooter(statusScooter);
-        scooterRepository.update(scooter);
+        try {
+            StatusScooter statusScooter = statusScooterService.findById(statusScooterDTO.getId());
+            Scooter scooter = scooterRepository.findById(id);
+            scooter.setStatusScooter(statusScooter);
+            scooterRepository.update(scooter);
+        } catch (RuntimeException exception) {
+            log.error("Can't set status scooter! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't set status scooter!");
+        }
     }
 
     @Override
@@ -118,11 +125,24 @@ public class ScooterServiceImpl implements ScooterService {
 
     @Override
     public Scooter getScooterWithHistory(Integer id) {
-        return scooterRepository.getHistoryScooter(id);
+        try {
+            return scooterRepository.getHistoryScooter(id);
+        } catch (RuntimeException exception) {
+            log.error("Can't get scooter with history! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get scooter with history!");
+        }
     }
 
     @Override
-    public ScooterHistoryDTO getScooterHistory(Integer id) {
-        return modelMapper.map(scooterRepository.getHistoryScooter(id), ScooterHistoryDTO.class);
+    public List<ScooterInfoDTO> getStayScootersFromPoint(Integer idPoint) {
+        try {
+            return scooterRepository.getStayScootersFromPoint(idPoint)
+                    .stream()
+                    .map(scooter -> modelMapper.map(scooter, ScooterInfoDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get list of scooters with status Stay! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get list of scooters with status Stay!");
+        }
     }
 }

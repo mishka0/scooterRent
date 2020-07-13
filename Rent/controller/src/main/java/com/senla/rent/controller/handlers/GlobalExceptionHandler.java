@@ -1,6 +1,6 @@
 package com.senla.rent.controller.handlers;
 
-import com.senla.rent.dao.exceptions.NullDaoException;
+import com.senla.rent.exceptions.NullDaoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
