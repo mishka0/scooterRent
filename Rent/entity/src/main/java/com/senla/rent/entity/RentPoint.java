@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "rental_point")
 @Getter @Setter

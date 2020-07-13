@@ -29,7 +29,6 @@
         <module>api</module>
         <module>security</module>
         <module>controller</module>
-        <module>config</module>
 
     </modules>
     <build>
@@ -42,15 +41,25 @@
                 <configuration>
                     <configLocation>styleConfigs/checkstyle/checkstyle.xml</configLocation>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals><goal>checkstyle</goal></goals>
-                    </execution>
-                </executions>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals><goal>checkstyle</goal></goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <dependencyManagement>
         <dependencies>
@@ -72,11 +81,6 @@
             <dependency>
                 <groupId>com.senla.rent</groupId>
                 <artifactId>controller</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.senla.rent</groupId>
-                <artifactId>config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

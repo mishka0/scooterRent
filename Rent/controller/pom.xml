@@ -9,6 +9,20 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>controller</artifactId>
+    <packaging>war</packaging>
+    <build>
+        <finalName>rent</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.3</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <!-- Servlet api -->
@@ -26,19 +40,23 @@
             <version>${spring.version}</version>
         </dependency>
 
+
         <!-- API project -->
         <dependency>
             <groupId>com.senla.rent</groupId>
             <artifactId>api</artifactId>
         </dependency>
-
         <!-- DAO project -->
         <dependency>
             <groupId>com.senla.rent</groupId>
             <artifactId>dao</artifactId>
         </dependency>
-
-        <!-- Securitiy project -->
+        <!-- Service project-->
+        <dependency>
+            <groupId>com.senla.rent</groupId>
+            <artifactId>service</artifactId>
+        </dependency>
+        <!-- Security project -->
         <dependency>
             <groupId>com.senla.rent</groupId>
             <artifactId>security</artifactId>
@@ -49,6 +67,14 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.11.0</version>
+        </dependency>
+
+
+        <!-- ModelMapper-->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${model.mapper.version}</version>
         </dependency>
 
         <!--Test-->
@@ -65,10 +91,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.senla.rent</groupId>
-            <artifactId>service</artifactId>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

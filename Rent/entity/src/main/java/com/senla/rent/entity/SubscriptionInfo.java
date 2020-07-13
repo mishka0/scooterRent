@@ -5,9 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "subscription_info")
@@ -28,7 +28,7 @@ public class SubscriptionInfo {
     @Column(name = "time")
     private Duration time;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "subscriptionInfo")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriptionInfo")
     private Set<Subscription> subscriptions;
 
     @Override

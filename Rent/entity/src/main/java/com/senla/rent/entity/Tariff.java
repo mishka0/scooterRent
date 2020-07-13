@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "tariff")
 @Getter

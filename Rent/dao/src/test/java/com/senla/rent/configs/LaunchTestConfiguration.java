@@ -1,14 +1,14 @@
 package com.senla.rent.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.senla.rent.HistoryRepositoryImpl;
-import com.senla.rent.SubscriptionRepositoryImpl;
-import com.senla.rent.UserRepositoryImpl;
+import com.senla.rent.dao.HistoryRepositoryImpl;
+import com.senla.rent.dao.SubscriptionRepositoryImpl;
+import com.senla.rent.dao.UserRepositoryImpl;
 import com.senla.rent.api.dao.AdditionRepository;
 import com.senla.rent.api.dao.HistoryRepository;
 import com.senla.rent.api.dao.SubscriptionRepository;
 import com.senla.rent.api.dao.UserRepository;
-import com.senla.rent.AdditionRepositoryImpl;
+import com.senla.rent.dao.AdditionRepositoryImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;

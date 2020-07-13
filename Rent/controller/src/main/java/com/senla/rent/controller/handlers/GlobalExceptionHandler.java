@@ -1,6 +1,6 @@
 package com.senla.rent.controller.handlers;
 
-import com.senla.rent.exceptions.NullDaoException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,19 +17,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
-    @ExceptionHandler(NullDaoException.class)
-    public ResponseEntity<Object> handleNullDaoException(NullDaoException exception) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("exception", exception.getClass());
-        body.put("message", exception.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Object> handleInvalidJwtAuthentication(AuthenticationException exception) {
-//        log.debug("handling InvalidJwtAuthenticationException...");
         Map<String, Object> body = new HashMap<>();
         body.put("exception", exception.getClass());
         body.put("message", exception.getMessage());
@@ -38,7 +27,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception) {
-//        log.debug("handling InvalidJwtAuthenticationException...");
         Map<String, Object> body = new HashMap<>();
         body.put("exception", exception.getClass());
         body.put("message", exception.getMessage());
