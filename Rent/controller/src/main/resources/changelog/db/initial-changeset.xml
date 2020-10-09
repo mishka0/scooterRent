@@ -1,0 +1,261 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="misha" id="1">
+        <createTable tableName="addition">
+            <column autoIncrement="true" name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(30)"/>
+            <column name="last_name" type="VARCHAR(30)"/>
+            <column name="phone" type="VARCHAR(15)"/>
+            <column defaultValueNumeric="0" name="discount" type="INT"/>
+            <column defaultValueNumeric="0.0" name="balance" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="2">
+        <createTable tableName="history">
+            <column autoIncrement="true" name="history_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="scooter_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tariff_id" type="INT"/>
+            <column name="subscription_id" type="INT"/>
+            <column name="date_of_ride" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="final_cost" type="DOUBLE"/>
+            <column name="time_start" type="time">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_end" type="time"/>
+            <column name="is_closed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="3">
+        <createTable tableName="rental_point">
+            <column autoIncrement="true" name="point_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="address" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="town_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="4">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="role_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="5">
+        <createTable tableName="scooter">
+            <column autoIncrement="true" name="scooter_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="model" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rental_point_id" type="INT"/>
+            <column name="status_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="6">
+        <createTable tableName="status_scooter">
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column autoIncrement="true" name="status_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="7">
+        <createTable tableName="subscription">
+            <column autoIncrement="true" name="subscription_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_left" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subs_info_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="8">
+        <createTable tableName="subscription_info">
+            <column autoIncrement="true" name="subscription_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="9">
+        <createTable tableName="tariff">
+            <column autoIncrement="true" name="tariff_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="10">
+        <createTable tableName="town">
+            <column autoIncrement="true" name="town_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="11">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="login" type="VARCHAR(45)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="12">
+        <createTable tableName="user_role">
+            <column name="role_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="misha" id="13">
+        <createIndex indexName="fk_history_scooter1_idx" tableName="history">
+            <column name="scooter_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="14">
+        <createIndex indexName="fk_history_subscription_idx" tableName="history">
+            <column name="subscription_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="15">
+        <createIndex indexName="fk_history_tariff_idx" tableName="history">
+            <column name="tariff_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="16">
+        <createIndex indexName="fk_history_user1_idx" tableName="history">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="17">
+        <createIndex indexName="fk_rental_point_town1_idx" tableName="rental_point">
+            <column name="town_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="18">
+        <createIndex indexName="fk_scooter_rental_point1_idx" tableName="scooter">
+            <column name="rental_point_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="19">
+        <createIndex indexName="fk_subscription_info1_idx" tableName="subscription">
+            <column name="subs_info_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="20">
+        <createIndex indexName="fk_subscription_user1" tableName="subscription">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="21">
+        <createIndex indexName="fk_users_roles_roles1_idx" tableName="user_role">
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="22">
+        <createIndex indexName="fk_users_roles_user_idx" tableName="user_role">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="23">
+        <createIndex indexName="status_fk_idx" tableName="scooter">
+            <column name="status_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="misha" id="24">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="addition" constraintName="fk_addition_user1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="user_id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="25">
+        <addForeignKeyConstraint baseColumnNames="scooter_id" baseTableName="history" constraintName="fk_history_scooter1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="scooter_id" referencedTableName="scooter" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="26">
+        <addForeignKeyConstraint baseColumnNames="subscription_id" baseTableName="history" constraintName="fk_history_subscription" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="subscription_id" referencedTableName="subscription" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="27">
+        <addForeignKeyConstraint baseColumnNames="tariff_id" baseTableName="history" constraintName="fk_history_tariff" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="tariff_id" referencedTableName="tariff" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="28">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="history" constraintName="fk_history_user1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="user_id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="29">
+        <addForeignKeyConstraint baseColumnNames="town_id" baseTableName="rental_point" constraintName="fk_rental_point_town1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="town_id" referencedTableName="town" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="30">
+        <addForeignKeyConstraint baseColumnNames="rental_point_id" baseTableName="scooter" constraintName="fk_scooter_rental_point1" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="RESTRICT" referencedColumnNames="point_id" referencedTableName="rental_point" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="31">
+        <addForeignKeyConstraint baseColumnNames="subs_info_id" baseTableName="subscription" constraintName="fk_subscription_info1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="subscription_id" referencedTableName="subscription_info" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="32">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="subscription" constraintName="fk_subscription_user1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="user_id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="33">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="fk_users_roles_roles1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="role_id" referencedTableName="role" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="34">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="fk_users_roles_user" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="user_id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="35">
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="scooter" constraintName="status_fk" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="CASCADE" referencedColumnNames="status_id" referencedTableName="status_scooter" validate="true"/>
+    </changeSet>
+    <changeSet author="misha" id="36">
+        <sqlFile path="changelog/db//data/dataPostgres.sql" />
+    </changeSet>
+</databaseChangeLog>
