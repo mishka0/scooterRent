@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "subscription")
+@Table(name = "subscription", schema = "public")
 @Getter
 @Setter
 public class Subscription {

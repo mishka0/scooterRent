@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "tariff")
+@Table(name = "tariff", schema = "public")
 @Getter
 @Setter
 public class Tariff {

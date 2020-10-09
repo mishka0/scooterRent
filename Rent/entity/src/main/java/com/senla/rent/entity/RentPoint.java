@@ -9,7 +9,7 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "rental_point")
+@Table(name = "rental_point", schema = "public")
 @Getter @Setter
 public class RentPoint {
     @Id

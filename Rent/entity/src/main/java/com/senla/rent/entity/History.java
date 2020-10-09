@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "history")
+@Table(name = "history", schema="public")
 @Getter
 @Setter
 public class History {

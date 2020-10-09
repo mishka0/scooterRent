@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "addition")
+@Table(name = "addition" , schema = "public")
 @Getter
 @Setter
 public class Addition {
