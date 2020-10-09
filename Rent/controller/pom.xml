@@ -40,6 +40,12 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <!-- Liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.1.0</version>
+        </dependency>
 
         <!-- API project -->
         <dependency>
