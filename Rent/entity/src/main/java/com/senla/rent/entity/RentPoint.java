@@ -11,6 +11,13 @@ import java.util.Set;
 @Entity
 @Table(name = "rental_point", schema = "public")
 @Getter @Setter
+/*@NamedEntityGraph(
+        name = "rent-point",
+        attributeNodes = {
+                @NamedAttributeNode("town"),
+
+        }
+)*/
 public class RentPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

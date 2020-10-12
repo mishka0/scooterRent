@@ -48,6 +48,19 @@ public class RentPointServiceImpl implements RentPointService {
     }
 
     @Override
+    public List<RentPointWithTownDTO> getAllPointsJdbcTemplate(Integer page, Integer limit) {
+        try {
+            return rentalPointRepository.getRentPointJdbcTemplate(page, limit)
+                    .stream()
+                    .map(rentalPoint -> modelMapper.map(rentalPoint, RentPointWithTownDTO.class))
+                    .collect(Collectors.toList());
+        } catch (RuntimeException exception) {
+            log.error("Can't get rent points! Message exception: " + exception.getMessage());
+            throw new ServiceException("Can't get rent points!");
+        }
+    }
+
+    @Override
     public RentPointAllInfoDTO getRentPointDetails(Integer idPoint) {
         try {
             return modelMapper.map(rentalPointRepository.getRentPoint(idPoint), RentPointAllInfoDTO.class);

@@ -3,6 +3,10 @@ package com.senla.rent.dao;
 import com.senla.rent.api.dao.RentPointRepository;
 import com.senla.rent.entity.RentPoint;
 import com.senla.rent.entity.RentPoint_;
+import com.senla.rent.entity.Town;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,8 +21,11 @@ public class RentPointRepositoryImpl extends AbstractRepository<RentPoint, Integ
     @PersistenceContext
     private EntityManager entityManager;
 
-    public RentPointRepositoryImpl() {
+    private final JdbcTemplate jdbcTemplate;
+
+    public RentPointRepositoryImpl(JdbcTemplate jdbcTemplate) {
         super(RentPoint.class);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -32,7 +39,10 @@ public class RentPointRepositoryImpl extends AbstractRepository<RentPoint, Integ
         allQuery.setFirstResult(page * limit);
         allQuery.setMaxResults(limit);
         return allQuery.getResultList();
+
     }
+
+
 
     public RentPoint getRentPoint(Integer id){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -42,4 +52,24 @@ public class RentPointRepositoryImpl extends AbstractRepository<RentPoint, Integ
         query.select(from).where(criteriaBuilder.equal(from.get(RentPoint_.id), id));
         return entityManager.createQuery(query).getSingleResult();
     }
+
+    @Override
+    public List<RentPoint> getRentPointJdbcTemplate(Integer page, Integer limit) {
+        List<RentPoint> points = jdbcTemplate.query(
+                "select * from rental_point limit ?",
+                new Object[]{(page+1)*limit},
+                (rs, rowNum) ->{
+                    RentPoint rentPoint = new RentPoint();
+                    rentPoint.setId(rs.getInt(1));
+                    rentPoint.setAddress(rs.getString(2));
+                    Town town = new Town();
+                    town.setId(rs.getInt(3));
+                    rentPoint.setTown(town);
+                    return rentPoint;
+                }
+        );
+        return points;
+    }
+
+
 }

@@ -29,6 +29,14 @@ public class RentPointController {
         return rentPointService.getAllPoints(page, limit);
     }
 
+    @GetMapping("/jdbc")
+    public List<RentPointWithTownDTO> getAllPointsJdbcTemplate(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "30") int limit){
+        return rentPointService.getAllPointsJdbcTemplate(page, limit);
+    }
+
+
     @GetMapping("/{id}")
     public List<ScooterInfoDTO> getScootersFromPoint(@PathVariable(value = "id") Integer idPoint){
         return scooterService.getStayScootersFromPoint(idPoint);

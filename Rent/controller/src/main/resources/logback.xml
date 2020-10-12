@@ -37,7 +37,7 @@
     </appender>
 
 
-    <logger name="com.senla.rent.com.senla.rent.controller.configs" level="error">
+    <logger name="com.senla.rent.controller.configs" level="error">
         <appender-ref ref="config"/>
     </logger>
 

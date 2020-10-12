@@ -60,6 +60,7 @@ public class SecurityWebConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
+                .antMatchers("/test/**").permitAll()
                 .antMatchers("/profile/**").hasAuthority("USER")
                 .antMatchers("/moder/**").hasAuthority("MODER")
                 .antMatchers("/admin/**").hasAuthority("ADMIN")

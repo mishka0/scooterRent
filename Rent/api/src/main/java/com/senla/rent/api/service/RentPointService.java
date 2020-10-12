@@ -13,6 +13,8 @@ public interface RentPointService {
 
     List<RentPointWithTownDTO> getAllPoints(Integer page, Integer limit);
 
+    List<RentPointWithTownDTO> getAllPointsJdbcTemplate(Integer page, Integer limit);
+
     RentPointAllInfoDTO getRentPointDetails(Integer id);
 
     void updateRentPoint(Integer id, RentPointEditDTO rentalPointDTO);

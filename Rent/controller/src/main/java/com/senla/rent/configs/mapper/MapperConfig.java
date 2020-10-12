@@ -9,8 +9,11 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.convention.NamingConventions;
 import org.springframework.context.annotation.Bean;
 import org.modelmapper.config.Configuration.AccessLevel;
+import org.springframework.context.annotation.Configuration;
+
 import java.time.Duration;
 
+@Configuration
 public class MapperConfig {
 
     @Bean
